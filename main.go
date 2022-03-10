@@ -41,8 +41,35 @@ func main() {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 
+	glob, err := template.New("form.html").Parse(`<html>
+<body>
+<main>
+    <form id="user-form" data-testid="user-form" method="post" action="/user">
+        <label for="name">Name</label>
+        <input name="name" id="name" required type="text" data-test-id="name-input"/>
+        <label for="email">Email</label>
+        <input name="email" id="email" required type="email" data-test-id="email-input"/>
+        <label for="role">Role</label>
+        <input name="role" id="role" type="text" data-test-id="role-input"/>
+        <input type="submit" value="Submit" />
+    </form>
+</main>
+</body>
+</html>
+`)
+
+	glob, err = glob.New("user.html").Parse(`<html>
+<body>
+<main>
+    <div data-test-id="user-name">{{index . "name"}}</div>
+    <div data-test-id="user-email">{{index . "email"}}</div>
+    <div data-test-id="user-role">{{index . "role"}}</div>
+</main>
+</body>
+</html>`)
+
 	t := &Template{
-		templates: template.Must(template.ParseGlob("public/views/*.html")),
+		templates: template.Must(glob, err),
 	}
 
 	e.Renderer = t
