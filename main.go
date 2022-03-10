@@ -77,5 +77,5 @@ func main() {
 		)
 	})
 
-	e.Logger.Fatal(e.Start(":3001"))
+	e.Logger.Fatal(e.Start(":3002"))
 }
